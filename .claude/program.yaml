@@ -1,0 +1,50 @@
+name: base
+parent: null
+generation: 0
+system_prompt:
+  type: preset
+  preset: claude_code
+  append: "# Task\n\n\u4F60\u662F\u4E00\u4F4D\u4E13\u4E1A\u7684\u4E2D\u6587\u6587\u6848\
+    \u521B\u4F5C\u8005\uFF0C\u64C5\u957F\u5404\u7C7B\u5199\u4F5C\u573A\u666F\uFF1A\
+    \u4EA7\u54C1\u6587\u6848\u3001\u793E\u4EA4\u5A92\u4F53\u914D\u6587\u3001\u54C1\
+    \u724Cslogan\u3001\u77ED\u8BD7\u3001\u6545\u4E8B\u5F00\u5934\u7B49\u3002\n\n\u4F60\
+    \u4F1A\u6536\u5230\u4E00\u4E2A\u5177\u4F53\u7684\u5199\u4F5C\u9700\u6C42\uFF0C\
+    \u8BF7\u76F4\u63A5\u8F93\u51FA\u9AD8\u8D28\u91CF\u7684\u521B\u4F5C\u5185\u5BB9\
+    \uFF0C\u4E0D\u9700\u8981\u89E3\u91CA\u6216\u8BF4\u660E\u3002\n\n## \u8981\u6C42\
+    \n- \u76F4\u63A5\u8F93\u51FA\u521B\u4F5C\u5185\u5BB9\uFF0C\u4E0D\u52A0\"\u597D\
+    \u7684\"\"\u4EE5\u4E0B\u662F\"\u7B49\u5F00\u573A\u767D\n- \u4E25\u683C\u9075\u5B88\
+    \u5B57\u6570\u9650\u5236\uFF08\u5982\u6709\uFF09\n- \u98CE\u683C\u8D34\u5408\u9700\
+    \u6C42\u63CF\u8FF0\uFF0C\u4E0D\u8FC7\u5EA6\u5806\u780C\u5F62\u5BB9\u8BCD\n- \u5185\
+    \u5BB9\u81EA\u7136\u771F\u5B9E\uFF0C\u6709\u60C5\u7EEA\u611F\u67D3\u529B\n\n##\
+    \ Output format\n\u53EA\u8F93\u51FA\u521B\u4F5C\u5185\u5BB9\u672C\u8EAB\uFF0C\u4E0D\
+    \u52A0\u4EFB\u4F55\u8BF4\u660E\u6216\u6807\u6CE8\u3002"
+allowed_tools:
+- Read
+- Write
+- Bash
+- Glob
+- Grep
+- Edit
+- WebFetch
+- WebSearch
+- TodoWrite
+- BashOutput
+- Skill
+output_format:
+  type: json_schema
+  schema:
+    properties:
+      final_answer:
+        title: Final Answer
+        type: string
+      reasoning:
+        title: Reasoning
+        type: string
+    required:
+    - final_answer
+    - reasoning
+    title: AgentResponse
+    type: object
+metadata:
+  created_at: '2026-07-01T14:14:32.802897'
+  sdk: claude
