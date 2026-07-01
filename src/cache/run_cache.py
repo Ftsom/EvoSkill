@@ -274,7 +274,7 @@ class RunCache:
         # Write atomically (write to temp, then rename)
         temp_path = cache_path.with_suffix(".tmp")
         with open(temp_path, "w") as f:
-            json.dump(entry.model_dump(), f, indent=2, default=str)
+            json.dump(entry.model_dump(), f, indent=2, default=str, ensure_ascii=False)
         temp_path.rename(cache_path)
 
     def clear(self, tree_hash: str | None = None) -> int:
