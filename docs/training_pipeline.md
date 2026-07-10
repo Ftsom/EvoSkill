@@ -89,6 +89,13 @@ description: Preserve required output units for arithmetic answers.
 
 **Prompt 模式**：读取当前 prompt（`parent_config.system_prompt`），根据提案生成优化后的完整 prompt 文本，写入 `src/agent_profiles/base_agent/prompt.txt`。子程序分支命名为 `iter-prompt-{N}`。
 
+**变异目标的确定**：Generator 并不自己决定"变异什么"，而是完全由上游 Proposer 的输出决定：
+
+- `action="create"` + `proposed_skill` → Generator 在 `.claude/skills/` 下创建新目录和 SKILL.md
+- `action="edit"` + `target_skill` → Generator 读取 `.claude/skills/{target_skill}/SKILL.md` 并就地修改
+
+Proposer 的目标选择逻辑：扫描 `.claude/skills/` 下已有 skill 列表 → 判断是否有 skill 本应覆盖当前失败但未生效 → 有则 edit，无则 create。因此，若希望系统优先迭代某个已有 skill，只需将其初始版本预置到 `.claude/skills/{name}/SKILL.md`，Proposer 会自然倾向于 edit 它。
+
 ### 2.4 Evaluator：验证集评估
 
 新变体创建后，在**独立验证集**上完整评估表现。评估并发执行（默认 4 路并发），每个 Agent 调用有 17 分钟硬超时。
@@ -101,7 +108,7 @@ description: Preserve required output units for arithmetic answers.
 
 ### 2.5 Frontier：精英种群管理
 
-Frontier 维护 top-N（默认 3）个最优 Agent 配置，通过 git tag 标记：
+Frontier 维护 top-N（默认 3）个最优 Agent 配置（验证集平均分），通过 git tag 标记：
 
 ```
 程序分支：  program/base, program/iter-skill-1, program/iter-skill-2, ...
@@ -538,19 +545,19 @@ final_score = weighted_sum / weight_total
              │                                                   │
              └───────────────────────────────────────────────────┘
 
-                              │
-                              ▼
-                     Git Branch Structure
-                     ====================
-                     
-             main (用户代码, 不动)
-             program/base (基线)
-             program/iter-skill-1 (迭代 1)
-             program/iter-skill-2 (迭代 2)
-             ...
-             frontier/base (tag)
-             frontier/iter-skill-5 (tag, 当前最优)
-```
+                                       │
+                                       ▼
+                              Git Branch Structure
+                              ====================
+                              
+                              main (用户代码, 不动)
+                              program/base (基线)
+                              program/iter-skill-1 (迭代 1)
+                              program/iter-skill-2 (迭代 2)
+                              ...
+                              frontier/base (tag)
+                              frontier/iter-skill-5 (tag, 当前最优)
+         ```
 
 ---
 
